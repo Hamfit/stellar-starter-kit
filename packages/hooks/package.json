@@ -1,0 +1,21 @@
+{
+  "name": "@stellar-starter-kit/hooks",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@stellar-starter-kit/tsconfig": "workspace:*",
+    "@stellar-starter-kit/eslint-config": "workspace:*",
+    "@types/react": "^19.0.0-rc.0",
+    "typescript": "^5.5.2"
+  }
+}

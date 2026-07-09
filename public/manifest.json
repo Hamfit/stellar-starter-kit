@@ -1,0 +1,9 @@
+{
+  "short_name": "StellarStarter",
+  "name": "Stellar Starter Kit Dapp",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0B1120",
+  "background_color": "#030712"
+}
