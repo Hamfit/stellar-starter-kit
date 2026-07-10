@@ -1,7 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { isConnected as checkFreighterConnected, getPublicKey as getFreighterPublicKey, signTransaction as signFreighterTransaction } from '@stellar/freighter-api';
+import {
+  isConnected as checkFreighterConnected,
+  getPublicKey as getFreighterPublicKey,
+  signTransaction as signFreighterTransaction,
+} from '@stellar/freighter-api';
 import albedo from '@albedo-link/intent';
 
 interface RabetInterface {
@@ -12,7 +16,7 @@ interface RabetInterface {
 interface HanaInterface {
   send: (
     method: string,
-    params?: { xdr: string; network: string }
+    params?: { xdr: string; network: string },
   ) => Promise<{ publicKey?: string; signedTransaction?: string } | string>;
 }
 
@@ -36,7 +40,7 @@ export interface WalletContextType {
   disconnect: () => void;
   signTransaction: (
     xdr: string,
-    opts?: { network?: string; networkPassphrase?: string }
+    opts?: { network?: string; networkPassphrase?: string },
   ) => Promise<string>;
   setNetwork: (network: string) => void;
 }
@@ -105,7 +109,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(LOCAL_STORAGE_KEY_PROVIDER, provider);
       localStorage.setItem(LOCAL_STORAGE_KEY_ADDRESS, publicKey);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'An unknown error occurred connecting to the wallet.';
+      const message =
+        err instanceof Error ? err.message : 'An unknown error occurred connecting to the wallet.';
       setError(message);
       console.error('Wallet connection error:', err);
       throw err;
@@ -167,7 +172,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         throw new Error(message);
       }
     },
-    [activeProvider, activeAddress, network]
+    [activeProvider, activeAddress, network],
   );
 
   return (

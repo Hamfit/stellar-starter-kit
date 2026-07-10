@@ -9,4 +9,3 @@ export const WALLET_PROVIDERS = {
 export type WalletProviderType = (typeof WALLET_PROVIDERS)[keyof typeof WALLET_PROVIDERS];
 
 export * from './WalletProvider';
-
