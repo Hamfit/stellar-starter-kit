@@ -45,7 +45,12 @@ if (-not (Test-Path $DeploymentsDir)) {
 
 $Deployments = @{}
 if (Test-Path $DeploymentsFile) {
-    $Deployments = Get-Content $DeploymentsFile | ConvertFrom-Json -AsHashtable
+    $DeploymentsObj = Get-Content $DeploymentsFile | ConvertFrom-Json
+    if ($DeploymentsObj) {
+        foreach ($prop in $DeploymentsObj.psobject.properties) {
+            $Deployments[$prop.Name] = $prop.Value
+        }
+    }
 }
 
 # Contracts to deploy
@@ -64,16 +69,56 @@ foreach ($Contract in $Contracts) {
     }
 
     Write-Host "Deploying $Contract to Testnet..."
-    # Execute deployment and capture output (which contains the deployed contract ID)
-    $ContractId = & $StellarCli contract deploy --wasm $WasmPath --source-account $AccountName --network testnet
+    # Execute deployment and capture all streams to parse transaction links
+    $DeployOutput = & $StellarCli contract deploy --wasm $WasmPath --source-account $AccountName --network testnet 2>&1
     if ($LASTEXITCODE -ne 0) {
+        Write-Host "$DeployOutput"
         Write-Error "Failed to deploy $Contract."
         exit 1
     }
 
-    $ContractId = $ContractId.Trim()
+    $ContractId = ""
+    $WasmUploadUrl = ""
+    $ContractDeployUrl = ""
+    $TxUrls = @()
+
+    foreach ($Line in $DeployOutput) {
+        $LineStr = $Line.ToString().Trim()
+        Write-Host $LineStr
+        if ($LineStr -match "https://stellar.expert/explorer/testnet/tx/([a-f0-9]+)") {
+            $TxUrls += $Matches[0]
+        }
+        # Stellar contract address is 56 uppercase alphanumeric chars starting with C
+        if ($LineStr -match "^(C[A-Z2-7]{55})$") {
+            $ContractId = $Matches[1]
+        }
+    }
+
+    if ($TxUrls.Count -eq 2) {
+        $WasmUploadUrl = $TxUrls[0]
+        $ContractDeployUrl = $TxUrls[1]
+    } elseif ($TxUrls.Count -eq 1) {
+        $ContractDeployUrl = $TxUrls[0]
+    }
+
+    if (-not $ContractId) {
+        # Fallback if regex match fails for any reason
+        $ContractId = ($DeployOutput | Out-String).Trim()
+        if ($ContractId -match "(C[A-Z2-7]{55})") {
+            $ContractId = $Matches[1]
+        }
+    }
+
     Write-Host "Deployed $Contract successfully. ID: $ContractId"
-    $Deployments[$Contract] = $ContractId
+    
+    $DeployInfo = @{
+        "contractId" = $ContractId
+        "network" = "testnet"
+    }
+    if ($WasmUploadUrl) { $DeployInfo["wasmUploadUrl"] = $WasmUploadUrl }
+    if ($ContractDeployUrl) { $DeployInfo["contractDeployUrl"] = $ContractDeployUrl }
+
+    $Deployments[$Contract] = $DeployInfo
 
     # Generate TS bindings
     $OutputDir = Join-Path $WorkspaceRoot "packages/contracts/src/generated/$Contract"

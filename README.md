@@ -177,6 +177,33 @@ pnpm run dev
 
 Navigate to [http://localhost:3000](http://localhost:3000).
 
+### 5. Smart Contract Workflow
+
+You can compile, optimize, deploy, and invoke our flagship Counter smart contract on-chain using:
+
+```bash
+# Build Rust workspace contracts to WASM
+pnpm build:contracts
+
+# Optimize WASM binaries for minimum gas size
+pnpm optimize
+
+# Deploy to Stellar Testnet and generate typed TypeScript client bindings
+pnpm deploy:counter
+
+# Verify execution by invoking on-chain
+pnpm invoke:counter
+```
+
+### 🌐 Active Testnet Deployment Details
+
+Our reference smart contract is actively deployed on **Stellar Testnet**:
+
+- **Contract ID**: `CCH5B5TFLLN56KB4B762CA2IVX4MYRDDMYXDYIEITCXYIGMIEMLWWCSF`
+- **Stellar.expert Explorer**: [View Contract Details](https://stellar.expert/explorer/testnet/contract/CCH5B5TFLLN56KB4B762CA2IVX4MYRDDMYXDYIEITCXYIGMIEMLWWCSF)
+- **WASM Upload Transaction**: [Explorer Link](https://stellar.expert/explorer/testnet/tx/f75b79a3f1d8c196886b2a21dfc8947720b44b354ba14396dc67cd00d6f2be63)
+- **Contract Deploy Transaction**: [Explorer Link](https://stellar.expert/explorer/testnet/tx/933f41945e44434c25ed4300439f63da758621ac2eefee787818cee9f9b446bc)
+
 ---
 
 ## 💻 Baseline Usage Examples

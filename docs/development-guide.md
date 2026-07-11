@@ -56,30 +56,56 @@ docker compose down
 
 ---
 
-## 2. Soroban Smart Contract Scaffolding
+## 2. Soroban Smart Contract Development & Automation
 
-To write and compile Soroban smart contracts, you must install the Rust toolchain and the Soroban CLI.
+To compile, test, optimize, and deploy smart contracts, you can use the workspace shortcuts configured in the monorepo root.
 
-### Install Rust
+### Build Contracts
 
-Follow the instructions at [rustup.rs](https://rustup.rs/).
-
-### Install Soroban CLI
+Compile the Soroban Rust workspace contracts to WebAssembly:
 
 ```bash
-cargo install --locked soroban-cli
+pnpm build:contracts
 ```
 
-### Deploying a Contract
+### Optimize WASM
 
-1. Build contract WASM:
-   ```bash
-   cargo build --target wasm32-unknown-unknown --release
-   ```
-2. Deploy to local/testnet:
-   ```bash
-   soroban contract deploy \
-     --wasm target/wasm32-unknown-unknown/release/my_contract.wasm \
-     --source alice \
-     --network testnet
-   ```
+Optimize compiled contracts to minimize byte size and gas footprint:
+
+```bash
+pnpm optimize
+```
+
+### Deploy Contracts
+
+Deploy the optimized contracts to Stellar Testnet and generate strongly-typed TypeScript client bindings automatically inside `packages/contracts/src/generated`:
+
+```bash
+pnpm deploy:counter
+```
+
+### Invoke Contract via CLI
+
+Demonstrate and verify contract execution on Stellar Testnet:
+
+```bash
+pnpm invoke:counter
+```
+
+### Verification & Linting
+
+Run standard unit tests, formatting checks, and clippy lints inside the `contracts` workspace:
+
+```bash
+# Run unit tests
+cargo test --manifest-path contracts/Cargo.toml
+
+# Check code formatting
+cargo fmt --manifest-path contracts/Cargo.toml -- --check
+
+# Format code automatically
+cargo fmt --manifest-path contracts/Cargo.toml
+
+# Run Clippy lints
+cargo clippy --manifest-path contracts/Cargo.toml --all-targets -- -D warnings
+```
