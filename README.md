@@ -117,9 +117,18 @@ stellar-starter-kit/
 
 ## 🖼️ Application Showcase
 
+### 1. Main Dashboard
+
 <div align="center">
   <img src="public/dashboard.png" alt="Cosmic Dashboard Showcase" width="85%" style="border-radius: 12px; border: 1px solid #1e293b;"/>
   <p><em>Cosmic Dapp Interface Dashboard Preview</em></p>
+</div>
+
+### 2. Counter Smart Contract Dashboard
+
+<div align="center">
+  <img src="public/counter.png" alt="Counter Smart Contract Interface" width="85%" style="border-radius: 12px; border: 1px solid #1e293b;"/>
+  <p><em>Interact with Soroban smart contracts directly from the UI with real-time transaction logs and state synchronization.</em></p>
 </div>
 
 ---
